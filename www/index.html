@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+        <title>Login</title>
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <script type="text/javascript" src="js/cordova.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/SQLitePlugin.js"></script>
+        <!-- <script type="text/javascript" charset="utf-8" src="js/login.js"></script> -->
+    </head>
+    <script type="text/javascript">
+  history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        window.history.go(1);
+    };
+
+             var db = null, ID=0;
+            
+            document.addEventListener("deviceready", function(){ 
+                db = window.openDatabase("UserDb", "1.0", "Cordova Demo", 200000);
+                //db = window.sqlitePlugin.openDatabase({name: 'UserDb', location: 'default'});
+
+                //default: Library/LocalDatabase subdirectory - NOT visible to iTunes and NOT backed up by iCloud
+                //Library: Library backed up by iCloud, NOT visible to iTunes
+                //Documents: Documents visible to iTunes and backed up by iCloud
+
+
+                //For upgrade logic please check my existing video from below url
+                //http://infologs.in/ or http://youtube.com/webboostings/
+                // db.transaction(function(tx) {
+                //     tx.executeSql('CREATE TABLE IF NOT EXISTS RegTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, firstname VARCHAR2(30), lastname VARCHAR2(30), dob DATE, email VARCHAR2(50), paswrd VARCHAR2(30), cpaswrd VARCHAR2(30))');                    
+                // }, function(error) {
+                //     alert('Transaction ERROR: ' + error.message);
+                // }, function() {
+                //     alert("Database has been generated successfully.");
+                // });
+               
+                
+                 db.transaction(function(tx) {
+                    
+                    tx.executeSql('select email, paswrd from RegTable');                    
+                }, function(error) {
+                    alert('Transaction ERROR: ' + error.message);
+                }, function() {
+                    console.log("Database Connected");
+
+
+                });
+
+                
+            }, false);
+            function getlogin_success(){
+    db.transaction(function(transaction) {
+    transaction.executeSql('SELECT * FROM RegTable', [], function (tx, results) {
+     var len = results.rows.length;
+   
+   console.log("RegTable: " + len + " rows found.");
+   for (var i=0; i< len; i++) {  
+    var employee = results.rows.item(i);
+    var username=document.getElementById("username").value;
+    var password=document.getElementById("psw").value;
+    var fname=employee.firstname;
+    var uname=employee.email;
+    var pasw=employee.paswrd;
+    //var fn=employee.firstname;
+    //alert(username);
+    //alert(password);
+    if(username==uname && password==pasw){
+     alert("Login Success");
+     window.localStorage.setItem("loggedIn", 1);
+    window.localStorage.setItem("username", document.getElementById("username").value);
+    window.localStorage.setItem("firstname", fname);
+    //window.localStorage.setItem("firstname", fn);
+    window.location= "home.html";
+     break;
+    }
+    else{
+        var status=1;
+     }
+   }
+
+   })
+   
+   if(status==1)
+    {
+       alert("login failed");
+    }
+
+})
+}
+
+        </script>
+
+    <body style="margin:0px 00px 0px 0px;  " >
+        <script type="text/javascript" src="cordova.js"></script>
+         <div class="login-body">
+         </div>
+        <!-- <img src="D:\Users\Deeksha\Desktop\Home\www\img\bg1.png" id="bgimage"> -->
+ 
+   <div class = "login-form">
+    <div id="login-login-head">
+        <p>User Login</p>
+    </div>
+    <div class="login-login-box">
+    <div class="login-login-username">
+        <p id="text">User Name</p>
+    </div>   
+    <div class="login-login-input">
+        <input type="text" name="username" placeholder="Ex: ADRDE" id="username">
+    </div>
+     <div class="login-login-password">
+        <p id="text">Password</p>
+    </div>   
+    <div class="login-login-input">
+        <input type="password" name="password" id="psw" >
+    </div>
+    <center>
+        <div id="login-login-submit">
+        <input type="submit" name="submit" value="Submit" id="submit" class="btnsubmit" onclick="getlogin_success();">
+    </div>
+         <div id="register">
+        <a href="reg.html" id="reg">Register Yourself</a>
+    </div>
+   </div>
+   </div>
+
+
+    </body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <script type="text/javascript" src="js/cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/SQLitePlugin.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<script type="text/javascript">
+
+            // var db = null, ID=0;
+            
+            document.addEventListener(     "deviceready", function(){ 
+                db = window.openDatabase("UserDb", "1.0", "Cordova Demo", 200000);
+                //db = window.sqlitePlugin.openDatabase({name: 'UserDb', location: 'default'});
+                // alert("db opened");
+                //default: Library/LocalDatabase subdirectory - NOT visible to iTunes and NOT backed up by iCloud
+                //Library: Library backed up by iCloud, NOT visible to iTunes
+                //Documents: Documents visible to iTunes and backed up by iCloud
+
+
+                //For upgrade logic please check my existing video from below url
+                //http://infologs.in/ or http://youtube.com/webboostings/
+                db.transaction(function(tx) {
+
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS LeaveTable ( firstname VARCHAR(30), groupno INTEGER(30), email VARCHAR(50), leave_type VARCHAR(30), fdate DATE, tdate DATE) ');                    
+                }, function(error) {
+                    alert('Transaction ERROR: ' + error.message);
+                }, function() {
+                    alert("Database has been generated successfully.");
+                });
+            }, false);
+
+
+            function Reg_Leave_Rec()
+            {
+                 var firstname = document.getElementById("f_name").value;
+                var groupno = document.getElementById("c_gno").value;
+                var email = document.getElementById("c_email").value;
+                var leave_type = document.getElementById("ctype").value;
+                // var from = document.getElementById("fdob").value;
+                // var to = document.getElementById("tdob").value;'
+                var fdate = document.querySelector('#fdob').value;
+                var tdate = document.querySelector('#tdob').value;
+
+              
+
+                //if(paswrd==cpaswrd){
+
+                 
+                var params = [firstname, groupno, email, leave_type, fdate, tdate];
+                var strQuery = 'INSERT INTO LeaveTable VALUES (?,?,?,?,?,?)';
+                // var strQuery ="DROP TABLE LeaveTable";
+                
+                 db.transaction(
+                    function (tx) {
+                    tx.executeSql(strQuery,params);
+                    // tx.executeSql(strQuery);
+                    alert("registered successfully");
+                     window.location= "home.html";
+
+                }, function(error) {
+                    alert('Transaction ERROR: ' + error.message);
+                
+                }, 
+               
+                    function(){
+                    // alert(msg);
+                    //f1.onsubmit="index.html";
+                    alert("Leave Registered successfully");
+                    setTimeout("window.location.href='home.html'","5000");
+                   // return false; 
+                });
+             
+            
+             //}
+ 
+             /*else{
+                alert('password and confirm password should be same.');
+             }*/
+            }
+</script>
+
+<body style="margin:0px 0px 0px 0px; ">
+    <center>
+ <div class="form-body">
+
+    <div class="comp-form"  >
+        <div class="comp-form-head">
+            
+            <p id="form-top">Enter Leave Details</p>
+                    
+        </div>
+        
+        <!-- <form id="f1" onsubmit="RegNow()" > -->
+            <div class="cname">
+                <p class="txt_name">Name</p> 
+            </div>
+            <div class="comp-form-fname">
+                <input type="text" name="fname" placeholder="Enter Your Name Here..." id="f_name" required="" class="name">
+            </div>
+
+            <div class="cname">
+                <p id="cemail" class="txt_name">Enter Your E-Mail Id</p>
+            </div>
+            <div class="comp-form-email ">
+                
+                <input type="text" placeholder="Enter Your E-Mail Id" name="email" id="c_email" required="" class="name">
+            </div>
+            <div class="cname">
+                <p id="groupno" class="txt_name">Enter Your Group Name</p>
+            </div>
+            <div class="comp-form-email ">
+                <input type="text" placeholder="Enter Your Group Name" name="gno" id="c_gno" required="" class="name"> 
+            </div>
+             <div class="cname">
+                <p id="comptype" class="txt_name">Enter Leave Type.</p>
+            </div>
+            <div class="comp-form-email ">
+                
+                <input type="text" placeholder="Enter Complaint Type" name="compdesc" id="ctype" required="" class="name"> 
+            </div>
+            <div class="cname">
+                    <p>From:</p>
+            </div>
+            <div class="comp-form-email">
+                <input type="DATE" name="fdob" id="fdob" class="name">
+            </div>
+             <div class="cname">
+                    <p>To:</p>
+            </div>
+            <div class="comp-form-email">
+                <input type="DATE" name="tdob" id="tdob" class="name">
+            </div>
+            <div class="comp-form-name">
+                <center>
+                <input type="submit" value="SUBMIT"  id="submit" class="btnsubmit" onclick ="Reg_Leave_Rec()">
+                <input type="submit" value="BACK"  id="submit" class="btnsubmit" onclick="window.location.href='home.html'">
+                </center>
+            </div>
+
+        <!-- </form> -->
+    
+</div>
+</div>
+</center>
+</body>
+</html>  

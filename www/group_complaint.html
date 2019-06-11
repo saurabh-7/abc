@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Registration</title>
+	<link rel="stylesheet" type="text/css" href="css/index.css" />
+	<script type="text/javascript" src="js/cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/SQLitePlugin.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<script type="text/javascript">
+
+            var db = null, ID=0;
+            
+            document.addEventListener(     "deviceready", function(){ 
+                db = window.openDatabase("UserDb", "1.0", "Cordova Demo", 200000);
+                //db = window.sqlitePlugin.openDatabase({name: 'UserDb', location: 'default'});
+                // alert("db opened");
+                //default: Library/LocalDatabase subdirectory - NOT visible to iTunes and NOT backed up by iCloud
+                //Library: Library backed up by iCloud, NOT visible to iTunes
+                //Documents: Documents visible to iTunes and backed up by iCloud
+
+
+                //For upgrade logic please check my existing video from below url
+                //http://infologs.in/ or http://youtube.com/webboostings/
+                db.transaction(function(tx) {
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS CompTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, firstname VARCHAR2(30), groupno INTEGER(30), email VARCHAR2(50), complaint_type VARCHAR2(30), complaintdescp VARCHAR2(300))');                    
+                }, function(error) {
+                    alert('Transaction ERROR: ' + error.message);
+                }, function() {
+                    alert("Database has been generated successfully.");
+                });
+            }, false);
+
+
+            function Reg_Comp_Now()
+            {
+            	 var firstname = document.getElementById("c_fname").value;
+                var groupno = document.getElementById("c_gno").value;
+                var email = document.getElementById("c_email").value;
+                var complaint_type = document.getElementById("ctype").value;
+                var complaintdescp = document.getElementById("cdesc").value;
+               // var cpaswrd = document.getElementById("cpassw").value;
+
+                //if(paswrd==cpaswrd){
+
+                 
+                var params = [firstname, groupno, email, complaint_type, complaintdescp];
+                var strQuery = 'INSERT INTO CompTable VALUES (?,?,?,?,?)';
+                // var strQuery ="DROP TABLE RegTable";
+                
+                 db.transaction(
+                    function (tx) {
+                    tx.executeSql(strQuery,params);
+                    alert("registered successfully");
+                     window.location= "home.html";
+
+                }, function(error) {
+                    alert('Transaction ERROR: ' + error.message);
+                
+                }, 
+               
+                    function(){
+                    // alert(msg);
+                    //f1.onsubmit="index.html";
+                    alert("Complaint Registered successfully");
+                    setTimeout("window.location.href='index.html';","5000");
+                   // return false; 
+                });
+             
+            
+             //}
+ 
+             /*else{
+             	alert('password and confirm password should be same.');
+             }*/
+            }
+</script>
+
+<body style="margin:0px 0px 0px 0px; ">
+    <center>
+ <div class="form-body">
+
+	<div class="comp-form"  >
+		<div class="comp-form-head">
+			
+			<p id="form-top">Register Your Complaint</p>
+					
+		</div>
+        
+		<!-- <form id="f1" onsubmit="RegNow()" > -->
+			<div class="cname">
+				<p id="compname" class="txt_name">Name</p>	
+            </div>
+            <div class="comp-form-name">
+				<input type="text" name="fname" placeholder="Enter Your Name Here..." id="c_fname" required="" class="name">
+			</div>
+
+            <div class="cname">
+                <p id="cemail" class="txt_name">Enter Your E-Mail Id</p>
+            </div>
+			<div class="comp-form-email ">
+				
+				<input type="text" placeholder="Enter Your E-Mail Id" name="email" id="c_email" required="" class="name">
+			</div>
+            <div class="cname">
+                <p id="groupno" class="txt_name">Enter Your Group Name</p>
+            </div>
+            <div class="comp-form-email ">
+                
+                <input type="text" placeholder="Enter Your Group Name" name="gno" id="c_gno" required="" class="name"> 
+            </div>
+             <div class="cname">
+                <p id="comptype" class="txt_name">Enter Complaint Type.</p>
+            </div>
+            <div class="comp-form-email ">
+                
+                <input type="text" placeholder="Enter Complaint Type" name="compdesc" id="ctype" required="" class="name"> 
+            </div>
+            <div class="cname">
+                    <p> Complaint Description :</p>
+            </div>
+			<div class="comp_desc">
+				
+			
+				<textarea rows="7" cols="74" required="" placeholder="Enter Complaint Description..."  id="cdesc" name="comp_desc"></textarea>
+			</div>
+			<div class="reg-form-submission">
+				<center>
+				<input type="submit" value="SUBMIT"  id="submit" class="btnsubmit" onclick ="Reg_Comp_Now()">
+                 <input type="submit" value="BACK"  id="submit" class="btnsubmit" onclick="window.location.href='home.html'">
+				</center>
+			</div>
+
+		<!-- </form> -->
+	
+</div>
+</div>
+</center>
+</body>
+</html>
